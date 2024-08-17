@@ -32,9 +32,13 @@ struct Args {
     #[arg(short, long, default_value = "fox")]
     tags: String,
 
-    // Paws only.
+    /// Paws only.
     #[arg(short, long)]
     paws: bool,
+
+    /// Whether to include cubs. (Defaults to false)
+    #[arg(short, long)]
+    cubs: bool,
 }
 
 const E6_URL: &str = "https://e621.net/posts.json?limit=1";
@@ -159,10 +163,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         tags = "score:>100,paws,pawpads";
     }
 
-    let tags = tags
+    let mut tags = tags
         .split(",")
         .map(|s| s.to_owned())
         .collect::<Vec<String>>();
+
+    if !args.cubs {
+        tags.push("-cub".to_owned());
+    }
 
     let tags = Arc::new(tags);
 
