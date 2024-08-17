@@ -17,8 +17,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install musl-tools
         run: |
-          apt update
-          apt -y install musl-tools
+          sudo apt update
+          sudo apt -y install musl-tools
       - name: Install Rust toolchain
         run: |
           rustup update --no-self-update
