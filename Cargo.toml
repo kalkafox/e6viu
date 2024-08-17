@@ -16,5 +16,6 @@ crossterm = "*"
 clap = {version = "4.5.16", features = ["default"]}
 openssl = {version = "*", features = ["vendored"]}
 clap_derive = {version = "*"}
+indicatif = {version = "0.17.8"}
 futures-util = "*"
 rand = "*"

@@ -19,6 +19,7 @@ use crossterm::{
 use dotenv::dotenv;
 use e6viu::{E621Posts, Post, Spinners};
 use futures_util::StreamExt;
+use indicatif::{ProgressBar, ProgressStyle};
 use rand::seq::IteratorRandom;
 use reqwest::header::{HeaderValue, AUTHORIZATION, USER_AGENT};
 use tokio::task::JoinHandle;
@@ -172,6 +173,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         tags.push("-cub".to_owned());
     }
 
+    let mut downloaded = 0;
+
     let tags = Arc::new(tags);
 
     loop {
@@ -181,6 +184,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
         let posts = E621::new(tags.clone()).await?;
 
+        spinner.stop();
+
         let post = posts.first().ok_or("No posts found, somehow")?;
 
         match post.file.ext {
@@ -188,6 +193,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             e6viu::Ext::Swf => continue,
             _ => {}
         }
+
+        let total_size = post.file.size;
+
+        let pb = ProgressBar::new(total_size.try_into()?);
+
+        pb.set_style(ProgressStyle::with_template("{spinner:.green} [{elapsed_precise}] [{bar:.cyan/blue}] {bytes}/{total_bytes} | {bytes_per_sec}")?
+            .progress_chars("#>-"));
 
         let conf = viuer::Config {
             absolute_offset: false,
@@ -207,10 +219,20 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         while let Some(chunk) = data.next().await {
             let data = chunk?;
 
+            let chunk_size: u64 = data.len().try_into()?;
+
+            let new = std::cmp::min(downloaded + chunk_size, total_size.try_into()?);
+
+            downloaded = new;
+
+            pb.set_position(new);
+
             file.write_all(&data)?;
         }
 
-        spinner.stop();
+        downloaded = 0;
+
+        //spinner.stop();
 
         viuer::print_from_file(filename, &conf)?;
 
