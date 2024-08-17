@@ -32,7 +32,7 @@ jobs:
       - name: Archive production artifacts (linux-gnu)
         uses: actions/upload-artifact@v4
         with:
-          name: e6viu-x86_64-linux-gnu
+          name: e6viu-musl
           path: target/release/e6viu
       - name: Archive production artifacts (musl)
         uses: actions/upload-artifact@v4
@@ -50,5 +50,5 @@ jobs:
       - name: Archive production artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: e6viu-x86_64-linux-gnu
-          path: target/x86_64-unknown-linux-musl/release/e6viu
+          name: e6viu-macos
+          path: target/release/e6viu
