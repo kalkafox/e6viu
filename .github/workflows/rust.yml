@@ -2,28 +2,45 @@ name: Rust
 
 on:
   push:
-    branches: [ "master" ]
+    branches: ['master']
   pull_request:
-    branches: [ "master" ]
+    branches: ['master']
 
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
-
+  build-linux:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Build
-      run: cargo build --verbose --release
-    - name: Run tests
-      run: cargo test --verbose
-    - name: Archive production artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: build
-        path: |
-          target/release/e6viu
-          target/x86_64-unknown-linux-musl/release/e6viu
+      - uses: actions/checkout@v4
+      - name: Build (x86_64 musl)
+        run: cargo build --verbose --target=x86_64-unknown-linux-musl --release
+      - name: Build (x86_64 linux-gnu)
+        run: cargo build --verbose --release
+      - name: Run tests
+        run: cargo test --verbose
+      - name: Archive production artifacts (linux-gnu)
+        uses: actions/upload-artifact@v4
+        with:
+          name: e6viu-x86_64-linux-gnu
+          path: target/release/e6viu
+      - name: Archive production artifacts (musl)
+        uses: actions/upload-artifact@v4
+        with:
+          name: e6viu-x86_64-linux-gnu
+          path: target/x86_64-unknown-linux-musl/release/e6viu
+
+  build-macos:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: cargo build --verbose --release
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: e6viu-x86_64-linux-gnu
+          path: target/x86_64-unknown-linux-musl/release/e6viu

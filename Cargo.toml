@@ -14,6 +14,7 @@ dotenv = {version = "*"}
 viuer = {version = "*"}
 crossterm = "*"
 clap = {version = "4.5.16", features = ["default"]}
+openssl = {version = "*", features = ["vendored"]}
 clap_derive = {version = "*"}
 futures-util = "*"
 rand = "*"
