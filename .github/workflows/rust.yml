@@ -17,7 +17,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build
-      run: cargo build --verbose
+      run: cargo build --verbose --release
     - name: Run tests
       run: cargo test --verbose
     - name: Archive production artifacts
@@ -26,3 +26,4 @@ jobs:
         name: build
         path: |
           target/release/e6viu
+          target/x86_64-unknown-linux-musl/release/e6viu
