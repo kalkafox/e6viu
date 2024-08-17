@@ -1,0 +1,19 @@
+[package]
+name = "e6viu"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+serde = {version = "*"}
+serde_derive = {version = "*"}
+serde_json = {version = "*"}
+reqwest = {version = "*", features = ["json", "stream"]}
+tokio = {version = "*", features = ["full"]}
+base64 = {version = "*"}
+dotenv = {version = "*"}
+viuer = {version = "*"}
+crossterm = "*"
+clap = {version = "4.5.16", features = ["default"]}
+clap_derive = {version = "*"}
+futures-util = "*"
+rand = "*"
